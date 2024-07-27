@@ -10,7 +10,8 @@ router.post('/login', userController.login);
 // Protected routes
 router.get('/profile', userController.getProfile);
 router.put('/profile', userController.updateProfile);
-router.put('/change-password', userController.changePassword);
+router.put('/:id/change-password', userController.changePassword);
+router.put('/:id/update-profile', userController.updateProfile);
 router.get('/entities/count', userController.countEntities);
 router.get('/count-by-role', userController.countUsersByRole);
 router.get('/getAllUsers', userController.getAllUsers);

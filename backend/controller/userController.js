@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
 
         await newUser.save();
 
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).json({ message: 'Registration Successful!' });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
@@ -85,10 +85,11 @@ exports.getProfile = async (req, res) => {
 
 // Update user profile
 exports.updateProfile = async (req, res) => {
+    const { id } = req.params; // Get the user ID from params
     const { name, email } = req.body;
 
     try {
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(id);
 
         if (user) {
             user.name = name || user.name;
@@ -101,16 +102,18 @@ exports.updateProfile = async (req, res) => {
             res.status(404).json({ message: 'User not found' });
         }
     } catch (error) {
+        console.error('Server error:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Change password
 exports.changePassword = async (req, res) => {
+    const { id } = req.params;
     const { currentPassword, newPassword } = req.body;
 
     try {
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(id);
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -126,6 +129,7 @@ exports.changePassword = async (req, res) => {
 
         res.json({ message: 'Password changed successfully' });
     } catch (error) {
+        console.error('Error changing password:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };

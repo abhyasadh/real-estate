@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { editProfileApi, changePasswordApi } from '../../Apis/apis'; // Assuming editProfileApi and changePasswordApi are imported correctly
+import { editProfileApi, changePasswordApi, updateProfileApi, updatePasswordApi } from '../../Apis/apis'; // Assuming editProfileApi and changePasswordApi are imported correctly
 import { toast } from 'react-toastify';
 import avatar from '../../assets/images.jpg';
 
@@ -44,67 +44,48 @@ const UserProfile = () => {
   };
 
 
-const handleEditProfileSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const updatedProfileData = {
-      name: name,
-      email: email,
-      phone: phone,
-    };
-    const token = localStorage.getItem("token"); // Assuming you stored the token in local storage
-    const response = await fetch(`http://localhost:5000/api/user/${user._id}/edit-profile`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Add the token to the Authorization header
-      },
-      body: JSON.stringify(updatedProfileData)
-    });
-    const data = await response.json();
-    console.log('Profile updated successfully:', data);
-    
-    // Update the user state
-    setUser({ ...user, name, email, phone });
-    
-    // Update local storage
-    localStorage.setItem("user", JSON.stringify({ ...user, name, email, phone }));
-    
-    // Show success toast message
-    toast.success('Profile updated successfully!');
-    
-    closeEditProfileModal();
-  } catch (error) {
-    console.error('Error updating profile:', error);
-    
-    // Show error toast message
-    toast.error('Failed to update profile!');
-  }
+  const handleEditProfileSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const updatedProfileData = {
+        name: name,
+        email: email,
+      };
+      const user = JSON.parse(localStorage.getItem("user"));
+      const response = await updateProfileApi(user.id, updatedProfileData);
+      const data = response.data; // Axios response data
+
+      console.log('Profile updated successfully:', data);
+      
+      setUser({ ...user, name, email });
+      localStorage.setItem("user", JSON.stringify({ ...user, name, email }));
+      toast.success('Profile updated successfully!');
+      
+      closeEditProfileModal();
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile!');
+    }
 };
+
 const handleChangePasswordSubmit = async (e) => {
   e.preventDefault();
-  if (newPassword.length < 5) {
-    toast.error('New password must be at least 8 characters long');
+  if (newPassword.length < 6) {
+    toast.error('New password must be at least 6 characters long');
     return;
   }
   try {
-    const token = localStorage.getItem("token"); // Assuming you stored the token in local storage
-    const response = await fetch(`http://localhost:5000/api/user/${user._id}/change-password`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Add the token to the Authorization header
-      },
-      body: JSON.stringify({
-        currentPassword,
-        newPassword
-      })
+    const user = JSON.parse(localStorage.getItem("user"));
+    const response = await updatePasswordApi(user.id, {
+      currentPassword,
+      newPassword,
     });
-    const data = await response.json();
-    toast.success('Password changed successfully!');
+    const data = await response.data; // axios returns response data directly
+    toast.info(data.message);
     closeChangePasswordModal();
   } catch (error) {
     console.error('Error changing password:', error);
+    toast.error('Failed to change password!');
   }
 };
 
@@ -134,12 +115,6 @@ const handleChangePasswordSubmit = async (e) => {
             Email
           </label>
           <p className="text-gray-900">{email}</p>
-        </div>
-        <div className="mb-4">
-          <label htmlFor="phone" className="block text-gray-700 font-medium mb-2">
-            Phone
-          </label>
-          <p className="text-gray-900">{phone}</p>
         </div>
         <div className="flex justify-between items-center">
           <button
@@ -185,19 +160,6 @@ const handleChangePasswordSubmit = async (e) => {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border rounded"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="editPhone" className="block text-gray-700 font-medium mb-2">
-                Phone
-              </label>
-              <input
-                type="text"
-                id="editPhone"
-                name="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
                 className="w-full px-3 py-2 border rounded"
               />
             </div>

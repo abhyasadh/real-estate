@@ -22,6 +22,8 @@ const config = {
 
 export const loginApi = (data) => ApiJson.post("/api/users/login", data);
 export const registerApi = (data) => ApiJson.post("/api/users/register", data);
+export const updatePasswordApi = (id, data) => ApiJson.put(`/api/users/${id}/change-password`, data, config);
+export const updateProfileApi = (id, data) => ApiJson.put(`/api/users/${id}/update-profile`, data, config);
 // ------------------------------Property Type API ------------------------------
 export const getPropertyTypes = () => Api.get("/api/propertytypes");
 export const addPropertyType = (data) => ApiJson.post("/api/propertytypes/add", data, config);

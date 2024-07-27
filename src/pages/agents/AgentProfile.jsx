@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import avatar from '../../assets/images.jpg';
+import { updatePasswordApi, updateProfileApi } from '../../Apis/apis';
 
 const AgentProfile = () => {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
@@ -46,62 +47,43 @@ const AgentProfile = () => {
         name: name,
         email: email,
       };
-      const token = localStorage.getItem("token"); // Assuming you stored the token in local storage
-      const response = await fetch(`http://localhost:5000/api/users/${user._id}/edit-profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Add the token to the Authorization header
-        },
-        body: JSON.stringify(updatedProfileData)
-      });
-      const data = await response.json();
+      const user = JSON.parse(localStorage.getItem("user"));
+      const response = await updateProfileApi(user.id, updatedProfileData);
+      const data = response.data; // Axios response data
+
       console.log('Profile updated successfully:', data);
       
-      // Update the user state
       setUser({ ...user, name, email });
-      
-      // Update local storage
       localStorage.setItem("user", JSON.stringify({ ...user, name, email }));
-      
-      // Show success toast message
       toast.success('Profile updated successfully!');
       
       closeEditProfileModal();
     } catch (error) {
       console.error('Error updating profile:', error);
-      
-      // Show error toast message
       toast.error('Failed to update profile!');
     }
-  };
+};
 
-  const handleChangePasswordSubmit = async (e) => {
-    e.preventDefault();
-    if (newPassword.length < 5) {
-      toast.error('New password must be at least 8 characters long');
-      return;
-    }
-    try {
-      const token = localStorage.getItem("token"); // Assuming you stored the token in local storage
-      const response = await fetch(`http://localhost:5000/api/users/${user._id}/change-password`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Add the token to the Authorization header
-        },
-        body: JSON.stringify({
-          currentPassword,
-          newPassword
-        })
-      });
-      const data = await response.json();
-      toast.success('Password changed successfully!');
-      closeChangePasswordModal();
-    } catch (error) {
-      console.error('Error changing password:', error);
-    }
-  };
+const handleChangePasswordSubmit = async (e) => {
+  e.preventDefault();
+  if (newPassword.length < 6) {
+    toast.error('New password must be at least 6 characters long');
+    return;
+  }
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const response = await updatePasswordApi(user.id, {
+      currentPassword,
+      newPassword,
+    });
+    const data = await response.data; // axios returns response data directly
+    toast.info(data.message);
+    closeChangePasswordModal();
+  } catch (error) {
+    console.error('Error changing password:', error);
+    toast.error('Failed to change password!');
+  }
+};
 
   return (
     <div className="">

@@ -249,7 +249,7 @@ const AgentAddProperty = () => {
                 ))}
               </select>
             </div>
-            <div>
+            <div hidden>
               <label className="block text-sm font-semibold text-gray-700">Owner</label>
               <input
                 type="text"
