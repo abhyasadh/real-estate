@@ -93,7 +93,7 @@ const Plots = () => {
                     <p className="text-white font-bold text-lg mb-2">
                       {plot.title}
                     </p>
-                    <p className="text-gray-300 text-lg mb-2">रु. {plot.price}</p>
+                    <p className="text-gray-300 text-lg mb-2">$. {plot.price}</p>
                     <p className="text-white text-sm mb-4">
                       {plot.type.type}
                     </p>

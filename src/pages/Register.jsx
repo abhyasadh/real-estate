@@ -60,7 +60,7 @@ const Register = () => {
         role,
       });
 
-      if (response.data.success) {
+      if (response.status) {
         setMessage("Registration Successful!");
         toast.success(response.data.message);
 
@@ -74,7 +74,7 @@ const Register = () => {
       }
     } catch (error) {
       console.error(error);
-      setMessage("Something went wrong");
+      setMessage("Something went wrong!");
     }
   };
 

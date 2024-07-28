@@ -88,7 +88,7 @@ const PropertyPage = () => {
           <p className="text-lg mb-4"><strong>State:</strong> {property.state.name}</p>
           <p className="text-lg mb-4"><strong>City:</strong> {property.city.name}</p>
           <p className="text-lg mb-4"><strong>Owner:</strong> {property.owner.name}</p>
-          <p className="text-lg mb-4"><strong>Price:</strong> रु. {property.price}</p>
+          <p className="text-lg mb-4"><strong>Price:</strong> $. {property.price}</p>
           <p className="text-lg mb-4"><strong>Status:</strong> {property.status}</p>
           <p className="text-lg mb-4"><strong>Description:</strong> {property.description}</p>
           {user && user.role === 'buyer' && (

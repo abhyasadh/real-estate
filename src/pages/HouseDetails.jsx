@@ -208,7 +208,7 @@ const HouseDetails = () => {
                 </div>
               </div>
               <div>
-                <p className="text-xl font-bold">रु. {houseData.price}</p>
+                <p className="text-xl font-bold">$. {houseData.price}</p>
               </div>
             </div>
             <div className="mt-4 grid gap-4 sm:mt-6 md:mt-8 md:grid-cols-2 lg:mt-10 lg:grid-cols-5">
@@ -379,7 +379,7 @@ const HouseDetails = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 z-10">
                   <div className="flex justify-between items-center">
                     <p className="font-bold">Price:</p>
-                    <p className="ml-4 sm:mr-4">रु. {houseData.price}</p>
+                    <p className="ml-4 sm:mr-4">$. {houseData.price}</p>
                   </div>
                   <div className="flex justify-between items-center">
                     <p className="font-bold">Garage Size:</p>
