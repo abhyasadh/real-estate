@@ -142,7 +142,7 @@ const Contact = () => {
                       <h3 className="mb-2 text-lg font-medium leading-6 text-gray-900 ">Contact</h3>
                       <p className="text-gray-600 dark:text-slate-400">Mobile: +977 9812345678</p>
                       <p className="ml-14 text-gray-600 dark:text-slate-400">+977 9812345678</p>
-                      <p className="text-gray-600 dark:text-slate-400">Mail: gharghaderi@gmail.com</p>
+                      <p className="text-gray-600 dark:text-slate-400">Mail: raybiner@gmail.com</p>
                     </div>
                   </li>
                   <li className="flex">
