@@ -19,5 +19,8 @@ router.get('/owner/:ownerId/enquiries', propertyController.getEnquiriesByOwnerId
 router.post('/enquiries/:enquiryId/respond', propertyController.respondToEnquiry); // 
 router.get('/agent/enquiries/:agentId', propertyController.getAgentEnquiries);
 router.get('/admin/enquiries', propertyController.getAllEnquiries);
+router.put('/reviews/approve/:id/:reviewId', propertyController.approveReview);
+router.put('/reviews/disapprove/:id/:reviewId', propertyController.disapproveReview);
+router.put('/reviews/delete/:id/:reviewId', propertyController.deleteReview);
 
 module.exports = router;
