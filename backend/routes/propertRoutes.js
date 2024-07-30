@@ -6,6 +6,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 // Property management routes
 router.post('/add', propertyController.addProperty);
 router.put('/update/:id', propertyController.updateProperty);
+router.delete('/delete/:id', propertyController.deleteProperty);
 router.get('/search/filter', propertyController.filterPropertiesByNames);
 router.get('/:id', propertyController.getPropertyById); // Ensure this route is specific enough to not conflict with other routes
 router.get('/', propertyController.getAllProperties);

@@ -7,7 +7,8 @@ import {
   getAllCitiesApi,
   getAllPropertiesApi,
   addPropertyApi,
-  updatePropertyApi
+  updatePropertyApi,
+  deletePropertyApi
 } from '../../Apis/apis';
 
 const ManageProperties = () => {
@@ -162,14 +163,15 @@ const ManageProperties = () => {
   };
 
   const handleDelete = async (id) => {
-    // try {
-    //   await deletePropertyApi(id);
-    //   toast.success('Property deleted successfully!');
-    //   fetchProperties();
-    // } catch (error) {
-    //   toast.error('Error deleting property.');
-    //   console.error('Error deleting property:', error);
-    // }
+    try {
+      await deletePropertyApi(id);
+      toast.success('Property deleted successfully!');
+      setShowDeleteModal(false);
+      fetchProperties();
+    } catch (error) {
+      toast.error('Error deleting property.');
+      console.error('Error deleting property:', error);
+    }
   };
 
   const openDeleteModal = (id) => {

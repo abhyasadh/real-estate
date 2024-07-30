@@ -82,6 +82,24 @@ exports.updateProperty = async (req, res) => {
     }
 };
 
+// Delete a property by ID
+exports.deleteProperty = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const property = await Property.findByIdAndDelete(id);
+
+      if (!property) {
+          return res.status(404).send({ message: 'Property not found' });
+      }
+
+      res.status(200).send({ message: 'Property deleted successfully' });
+  } catch (error) {
+      console.error('Error deleting property:', error);
+      res.status(500).send({ message: 'Internal Server Error' });
+  }
+};
+
 exports.getPropertyById = async (req, res) => {
   const { id } = req.params;
 

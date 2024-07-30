@@ -51,4 +51,5 @@ export const getAllPropertiesApi = () => ApiJson.get("/api/properties");
 export const getPropertyByIdApi = (id) => ApiJson.get(`/api/properties/${id}`);
 export const addPropertyApi = (data) => Api.post("/api/properties/add", data, config);
 export const updatePropertyApi = (id, data) => Api.put(`/api/properties/update/${id}`, data, config);
+export const deletePropertyApi = (id) => Api.delete(`/api/properties/delete/${id}`, config);
 export const getPropertiesByUserId = (id) => Api.get(`/api/properties/users/${id}/properties`);
