@@ -15,7 +15,9 @@ exports.addProperty = async (req, res) => {
 
         const { title, type, country, state, city, owner, price, status, description } = req.body;
 
-        if (!title || !type || !country || !state || !city || !owner || !price || !status) {
+        console.log('Request body:', req.body);
+
+        if (!title || !type || !country || !state || !city || !owner || !price || !status || !description) {
             return res.status(400).send({ message: 'All fields are required.' });
         }
 
@@ -58,6 +60,8 @@ exports.updateProperty = async (req, res) => {
 
       const { id } = req.params;
       const { title, type, country, state, city, owner, price, status, description } = req.body;
+
+      console.log('Request body:', req.body);
 
       if (!title || !type || !country || !state || !city || !owner || !price || !status || !description) {
           return res.status(400).send({ message: 'All fields are required.' });

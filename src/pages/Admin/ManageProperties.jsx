@@ -135,6 +135,7 @@ const ManageProperties = () => {
         type: "",
         country: "",
         state: "",
+        owner: "",
         city: "",
         price: "",
         status: "",
@@ -142,6 +143,7 @@ const ManageProperties = () => {
         image: null,
       });
       fetchProperties();
+      setOwnerFromLocalStorage();
     } catch (error) {
       toast.error(
         `Error ${editingPropertyId ? "updating" : "adding"} property.`
