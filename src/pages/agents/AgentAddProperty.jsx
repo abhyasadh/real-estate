@@ -23,7 +23,6 @@ const AgentAddProperty = () => {
     country: '',
     state: '',
     city: '',
-    owner: '',
     price: '',
     status: '',
     description: '',

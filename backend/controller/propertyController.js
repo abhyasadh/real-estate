@@ -51,35 +51,47 @@ exports.addProperty = async (req, res) => {
 
 // Update a property by ID
 exports.updateProperty = async (req, res) => {
-    const { id } = req.params;
-    const { title, type, country, state, city, owner, price, status, description } = req.body;
+  upload(req, res, async (err) => {
+      if (err) {
+          return res.status(400).send({ message: 'Error uploading files.', error: err.message });
+      }
 
-    if (!title || !type || !country || !state || !city || !owner || !price || !status) {
-        return res.status(400).send({ message: 'All fields are required.' });
-    }
+      const { id } = req.params;
+      const { title, type, country, state, city, owner, price, status, description } = req.body;
 
-    try {
-        const updatedProperty = await Property.findByIdAndUpdate(id, {
-            title,
-            type,
-            country,
-            state,
-            city,
-            owner,
-            price,
-            status,
-            description
-        }, { new: true });
+      if (!title || !type || !country || !state || !city || !owner || !price || !status || !description) {
+          return res.status(400).send({ message: 'All fields are required.' });
+      }
 
-        if (!updatedProperty) {
-            return res.status(404).send({ message: 'Property not found' });
-        }
+      try {
+          const updateData = {
+              title,
+              type,
+              country,
+              state,
+              city,
+              owner,
+              price,
+              status,
+              description
+          };
 
-        res.status(200).send({ message: 'Property updated successfully', property: updatedProperty });
-    } catch (error) {
-        console.error('Error updating property:', error);
-        res.status(500).send({ message: 'Internal Server Error' });
-    }
+          if (req.file) {
+              updateData.image = req.file.path;
+          }
+
+          const updatedProperty = await Property.findByIdAndUpdate(id, updateData, { new: true });
+
+          if (!updatedProperty) {
+              return res.status(404).send({ message: 'Property not found' });
+          }
+
+          res.status(200).send({ message: 'Property updated successfully', property: updatedProperty });
+      } catch (error) {
+          console.error('Error updating property:', error);
+          res.status(500).send({ message: 'Internal Server Error' });
+      }
+  });
 };
 
 // Delete a property by ID

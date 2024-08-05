@@ -131,7 +131,6 @@ const OwnerAddProperty = () => {
         country: '',
         state: '',
         city: '',
-        owner: '',
         price: '',
         status: '',
         description: '',
