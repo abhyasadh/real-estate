@@ -4,15 +4,15 @@ const State = require('../models/stateModel');
 exports.addState = async (req, res) => {
     console.log(req.body);
     try {
-        const { name } = req.body;
+        const { country, name } = req.body;
 
         // Validate input
-        if (!name) {
-            return res.status(400).send({ message: 'State name is required.' });
+        if (!country || !name) {
+            return res.status(400).send({ message: 'Please fill all fields.' });
         }
 
         // Create new state instance
-        const newState = new State({ name });
+        const newState = new State({ country, name });
 
         // Save the state to the database
         await newState.save();
@@ -28,16 +28,16 @@ exports.addState = async (req, res) => {
 // Update a state by ID
 exports.updateState = async (req, res) => {
     const { id } = req.params;
-    const { name } = req.body;
+    const { country, name } = req.body;
 
     try {
         // Validate input
-        if (!name) {
-            return res.status(400).send({ message: 'State name is required.' });
+        if (!country || !name) {
+            return res.status(400).send({ message: 'Please fill all fields.' });
         }
 
         // Find and update the state
-        const updatedState = await State.findByIdAndUpdate(id, { name }, { new: true });
+        const updatedState = await State.findByIdAndUpdate(id, { country, name }, { new: true });
 
         if (!updatedState) {
             return res.status(404).send({ message: 'State not found' });
@@ -69,8 +69,9 @@ exports.getStateById = async (req, res) => {
 
 // Get all states
 exports.getAllStates = async (req, res) => {
+    const countryId = req.query.countryId;
     try {
-        const states = await State.find();
+        const states = await State.find(countryId ? { country: countryId } : {}).populate('country');
         res.status(200).send({ states });
     } catch (error) {
         console.error('Error fetching states:', error);

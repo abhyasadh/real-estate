@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getAllCitiesApi, addCityApi, updateCityApi, deleteCityApi } from '../../Apis/apis';
+import { getAllCitiesApi, addCityApi, updateCityApi, deleteCityApi, getAllCountriesApi, getAllStatesApi } from '../../Apis/apis';
 
 const ManageCities = () => {
   const [cities, setCities] = useState([]);
-  const [formData, setFormData] = useState({ name: '' });
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [formData, setFormData] = useState({ country: '', state:'', name: '' });
   const [editingCityId, setEditingCityId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
 
   useEffect(() => {
     fetchCities();
+    fetchCountries();
   }, []);
 
   const fetchCities = async () => {
     try {
-      const res = await getAllCitiesApi();
+      const res = await getAllCitiesApi('', '');
       if (Array.isArray(res.data.cities)) {
         setCities(res.data.cities);
       } else {
@@ -30,6 +33,7 @@ const ManageCities = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    name === 'country' && fetchStates(value);
   };
 
   const handleSubmit = async (e) => {
@@ -53,7 +57,8 @@ const ManageCities = () => {
 
   const handleEdit = (city) => {
     setEditingCityId(city._id);
-    setFormData({ name: city.name });
+    fetchStates(city.country._id);
+    setFormData({ country: city.country._id, state: city.state._id, name: city.name });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -74,6 +79,26 @@ const ManageCities = () => {
     setShowDeleteModal(true);
   };
 
+  const fetchCountries = async () => {
+    try {
+      const res = await getAllCountriesApi();
+      setCountries(res.data.countries || []);
+    } catch (err) {
+      console.error("Failed to fetch countries:", err);
+      toast.error("Failed to fetch countries");
+    }
+  };
+
+  const fetchStates = async (countryId) => {
+    try {
+      const res = await getAllStatesApi(countryId);
+      setStates(res.data.states || []);
+    } catch (err) {
+      console.error("Failed to fetch states:", err);
+      toast.error("Failed to fetch states");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
       <div className="w-full max bg-white p-8 rounded-lg shadow-lg mb-10">
@@ -81,8 +106,46 @@ const ManageCities = () => {
           {editingCityId ? 'Edit City' : 'Add City'}
         </h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
+        <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                Country
+              </label>
+              <select
+                name="country"
+                value={formData.country}
+                onChange={handleInputChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-green-500"
+                required
+              >
+                <option value="">Select Country</option>
+                {countries.map((country) => (
+                  <option key={country._id} value={country._id}>
+                    {country.name}
+                  </option>
+               ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                State
+              </label>
+              <select
+                name="state"
+                value={formData.state}
+                onChange={handleInputChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-green-500"
+                required
+              >
+                <option value="">Select State</option>
+                {states.map((state) => (
+                  <option key={state._id} value={state._id}>
+                    {state.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700">Name</label>
+            <label className="block text-sm font-semibold text-gray-700">City</label>
             <input
               type="text"
               name="name"
@@ -112,7 +175,7 @@ const ManageCities = () => {
             >
               <div className="flex-grow">
                 <p className="text-gray-700 text-sm">
-                  <strong>Name:</strong> {city.name}
+                  <strong>Name:</strong> {city.name}, {city.state.name}, {city.country.name}
                 </p>
                 <div className="flex mt-3">
                   <button

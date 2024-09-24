@@ -82,7 +82,7 @@ const ManageCountries = () => {
         </h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-semibold text-gray-700">Name</label>
+            <label className="block text-sm font-semibold text-gray-700">Country</label>
             <input
               type="text"
               name="name"

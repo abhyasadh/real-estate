@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getAllStatesApi, addStateApi, updateStateApi, deleteStateApi } from '../../Apis/apis';
+import { getAllStatesApi, addStateApi, updateStateApi, deleteStateApi, getAllCountriesApi } from '../../Apis/apis';
 
 const ManageStates = () => {
   const [states, setStates] = useState([]);
-  const [formData, setFormData] = useState({ name: '' });
+  const [countries, setCountries] = useState([]);
+  const [formData, setFormData] = useState({ country: '', name: '' });
   const [editingStateId, setEditingStateId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
 
   useEffect(() => {
     fetchStates();
+    fetchCountries();
   }, []);
 
   const fetchStates = async () => {
     try {
-      const res = await getAllStatesApi();
+      const res = await getAllStatesApi('');
       if (Array.isArray(res.data.states)) {
         setStates(res.data.states);
       } else {
@@ -43,7 +45,7 @@ const ManageStates = () => {
         await addStateApi(formData);
         toast.success('State added successfully!');
       }
-      setFormData({ name: '' });
+      setFormData({ country: '', name: '' });
       fetchStates();
     } catch (error) {
       toast.error(`Error ${editingStateId ? 'updating' : 'adding'} state.`);
@@ -53,7 +55,7 @@ const ManageStates = () => {
 
   const handleEdit = (state) => {
     setEditingStateId(state._id);
-    setFormData({ name: state.name });
+    setFormData({ country: state.country._id, name: state.name });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -73,6 +75,16 @@ const ManageStates = () => {
     setShowDeleteModal(true);
   };
 
+  const fetchCountries = async () => {
+    try {
+      const res = await getAllCountriesApi();
+      setCountries(res.data.countries || []);
+    } catch (err) {
+      console.error("Failed to fetch countries:", err);
+      toast.error("Failed to fetch countries");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
       <div className="w-full max bg-white p-8 rounded-lg shadow-lg mb-10">
@@ -80,8 +92,27 @@ const ManageStates = () => {
           {editingStateId ? 'Edit State' : 'Add State'}
         </h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
+        <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                Country
+              </label>
+              <select
+                name="country"
+                value={formData.country}
+                onChange={handleInputChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-green-500"
+                required
+              >
+                <option value="">Select Country</option>
+                {countries.map((country) => (
+                  <option key={country._id} value={country._id}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700">Name</label>
+            <label className="block text-sm font-semibold text-gray-700">State</label>
             <input
               type="text"
               name="name"
@@ -111,7 +142,8 @@ const ManageStates = () => {
             >
               <div className="flex-grow">
                 <p className="text-gray-700 text-sm">
-                  <strong>Name:</strong> {state.name}
+              
+                  <strong>Name:</strong> {state.name}, {state.country.name}
                 </p>
                 <div className="flex mt-3">
                   <button

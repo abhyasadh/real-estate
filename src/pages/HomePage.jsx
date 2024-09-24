@@ -16,36 +16,40 @@ const HomePage = () => {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
+  // Disable search button until a country is selected
   useEffect(() => {
     setSearchDisabled(country === "");
   }, [country]);
 
+  // Fetch countries on component mount
   useEffect(() => {
     fetchCountries();
   }, []);
 
   const fetchCountries = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/countries');
+      const response = await axios.get("http://localhost:5000/api/countries");
       setCountries(response.data.countries);
     } catch (error) {
       console.error("Error fetching countries:", error);
     }
   };
 
+  // Fetch states based on the selected country
   const fetchStates = async (countryId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/states`);
+      const response = await axios.get(`http://localhost:5000/api/states?countryId=${countryId}`);
       setStates(response.data.states);
-      setCities([]); // Reset cities when country changes
+      setCities([]); // Reset cities when a new country is selected
     } catch (error) {
       console.error("Error fetching states:", error);
     }
   };
 
-  const fetchCities = async (stateId) => {
+  // Fetch cities based on the selected state
+  const fetchCities = async (countryId, stateId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/cities`);
+      const response = await axios.get(`http://localhost:5000/api/cities?countryId=${countryId}&stateId=${stateId}`);
       setCities(response.data.cities);
     } catch (error) {
       console.error("Error fetching cities:", error);
@@ -53,32 +57,29 @@ const HomePage = () => {
   };
 
   const handleCountryChange = (e) => {
-    setCountry(e.target.value);
-    fetchStates(e.target.value);
+    const selectedCountryId = e.target.value;
+    setCountry(selectedCountryId);
+    setState("")
+    setCity("");
+    fetchStates(selectedCountryId); // Fetch states for the selected country
   };
 
   const handleStateChange = (e) => {
-    setState(e.target.value);
-    fetchCities(e.target.value);
+    const selectedStateId = e.target.value;
+    setState(selectedStateId);
+    setCity(""); // Reset city
+    fetchCities(country, selectedStateId); // Fetch cities for the selected state
   };
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     if (country === "") {
       setShowPropertyTypeMessage(true);
       return;
     }
 
-    try {
-      navigate("/explore", {
-        state: {
-          country,
-          state,
-          city,
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching data for search:", error);
-    }
+    navigate("/explore", {
+      state: { country, state, city },
+    });
   };
 
   return (
@@ -98,7 +99,6 @@ const HomePage = () => {
             <div className="mt-6">
               <div className="mt-6 bg-white rounded-xl p-3 absolute shadow border border-lime-500">
                 <div className="grid grid-cols-4 md:grid-cols-4 gap-3 items-center">
-                 
                   <div className="flex flex-col border-r-2 px-2">
                     <select
                       className="border-0 font-bold lg:text-[14px] text-[12px]"
@@ -107,7 +107,9 @@ const HomePage = () => {
                     >
                       <option value="">Select Country</option>
                       {countries.map((country) => (
-                        <option key={country._id} value={country.name}>{country.name}</option>
+                        <option key={country._id} value={country._id}>
+                          {country.name}
+                        </option>
                       ))}
                     </select>
                     <div className="lg:text-[12px] text-[8px]">Select Country</div>
@@ -121,7 +123,9 @@ const HomePage = () => {
                     >
                       <option value="">Select State</option>
                       {states.map((state) => (
-                        <option key={state._id} value={state.name}>{state.name}</option>
+                        <option key={state._id} value={state._id}>
+                          {state.name}
+                        </option>
                       ))}
                     </select>
                     <div className="lg:text-[12px] text-[8px]">Select State</div>
@@ -135,14 +139,16 @@ const HomePage = () => {
                     >
                       <option value="">Select City</option>
                       {cities.map((city) => (
-                        <option key={city._id} value={city.name}>{city.name}</option>
+                        <option key={city._id} value={city._id}>
+                          {city.name}
+                        </option>
                       ))}
                     </select>
                     <div className="lg:text-[12px] text-[8px]">Select City</div>
                   </div>
                   <div className="flex flex-col items-center">
                     <button
-                      className={`flex items-center text-white font-bold px-4 py-2 bg-lime-500 rounded-full lg:text-[14px] text-[12px] ${searchDisabled ? 'cursor-not-allowed opacity-50' : ''}`}
+                      className={`flex items-center text-white font-bold px-4 py-2 bg-lime-500 rounded-full lg:text-[14px] text-[12px] ${searchDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                       onClick={handleSearch}
                       disabled={searchDisabled}
                     >

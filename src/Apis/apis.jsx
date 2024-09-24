@@ -43,14 +43,14 @@ export const updateCountryApi = (id, data) => ApiJson.put(`/api/countries/update
 export const deleteCountryApi = (id) => ApiJson.delete(`/api/countries/delete/${id}`, config);
 
 // ------------------------------State Type API ------------------------------
-export const getAllStatesApi = () => ApiJson.get("/api/states");
+export const getAllStatesApi = (countryId) => ApiJson.get(`/api/states?countryId=${countryId}`);
 export const getStateByIdApi = (id) => ApiJson.get(`/api/states/${id}`);
 export const addStateApi = (data) => ApiJson.post("/api/states/add", data, config);
 export const updateStateApi = (id, data) => ApiJson.put(`/api/states/update/${id}`, data, config);
 export const deleteStateApi = (id) => ApiJson.delete(`/api/states/delete/${id}`, config);
 
 // ------------------------------Cities Type API ------------------------------
-export const getAllCitiesApi = () => ApiJson.get("/api/cities");
+export const getAllCitiesApi = (countryId, stateId) => ApiJson.get(`/api/cities?countryId=${countryId}&stateId=${stateId}`);
 export const getCityByIdApi = (id) => ApiJson.get(`/api/cities/${id}`);
 export const addCityApi = (data) => ApiJson.post("/api/cities/add", data, config);
 export const updateCityApi = (id, data) => ApiJson.put(`/api/cities/update/${id}`, data, config);

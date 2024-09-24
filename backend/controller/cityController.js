@@ -4,15 +4,15 @@ const City = require('../models/cityModel');
 exports.addCity = async (req, res) => {
     console.log(req.body);
     try {
-        const { name } = req.body;
+        const { country, state, name } = req.body;
 
         // Validate input
-        if (!name) {
-            return res.status(400).send({ message: 'City name is required.' });
+        if (!country || !state || !name) {
+            return res.status(400).send({ message: 'All fields are required!' });
         }
 
         // Create new city instance
-        const newCity = new City({ name });
+        const newCity = new City({ country, state, name });
 
         // Save the city to the database
         await newCity.save();
@@ -28,16 +28,16 @@ exports.addCity = async (req, res) => {
 // Update a city by ID
 exports.updateCity = async (req, res) => {
     const { id } = req.params;
-    const { name } = req.body;
+    const { country, state, name } = req.body;
 
     try {
         // Validate input
-        if (!name) {
-            return res.status(400).send({ message: 'City name is required.' });
+        if (!country || !state || !name) {
+            return res.status(400).send({ message: 'All fields are required.' });
         }
 
         // Find and update the city
-        const updatedCity = await City.findByIdAndUpdate(id, { name }, { new: true });
+        const updatedCity = await City.findByIdAndUpdate(id, { country, state, name }, { new: true });
 
         if (!updatedCity) {
             return res.status(404).send({ message: 'City not found' });
@@ -69,8 +69,10 @@ exports.getCityById = async (req, res) => {
 
 // Get all cities
 exports.getAllCities = async (req, res) => {
+    const countryId = req.query.countryId;
+    const stateId = req.query.stateId;
     try {
-        const cities = await City.find();
+        const cities = await City.find( countryId ? { country: countryId } : stateId ? { state: stateId } : {}).populate('country').populate('state');
         res.status(200).send({ cities });
     } catch (error) {
         console.error('Error fetching cities:', error);

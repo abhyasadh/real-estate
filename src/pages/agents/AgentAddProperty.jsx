@@ -33,8 +33,6 @@ const AgentAddProperty = () => {
   useEffect(() => {
     fetchPropertyTypes();
     fetchCountries();
-    fetchStates();
-    fetchCities();
     fetchProperties();
     setOwnerFromLocalStorage();
   }, []);
@@ -69,9 +67,9 @@ const AgentAddProperty = () => {
     }
   };
 
-  const fetchStates = async () => {
+  const fetchStates = async (countryId) => {
     try {
-      const res = await getAllStatesApi();
+      const res = await getAllStatesApi(countryId);
       setStates(res.data.states || []);
     } catch (err) {
       console.error('Failed to fetch states:', err);
@@ -79,9 +77,9 @@ const AgentAddProperty = () => {
     }
   };
 
-  const fetchCities = async () => {
+  const fetchCities = async (countryId, stateId) => {
     try {
-      const res = await getAllCitiesApi();
+      const res = await getAllCitiesApi(countryId, stateId);
       setCities(res.data.cities || []);
     } catch (err) {
       console.error('Failed to fetch cities:', err);
@@ -103,6 +101,8 @@ const AgentAddProperty = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    name === 'country' && fetchStates(value) && setCities([]);
+    name ==='state' && fetchCities(formData.country, value);
   };
 
   const handleFileChange = (e) => {
@@ -146,6 +146,8 @@ const AgentAddProperty = () => {
 
   const handleEdit = (property) => {
     setEditingPropertyId(property._id);
+    fetchStates(property.country._id);
+    fetchCities(property.country._id, property.state._id);
     setFormData({
       title: property.title,
       type: property.type._id,
