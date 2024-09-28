@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getContactInfoApi } from '../Apis/apis';
+import { getContactInfoApi, addContactMessageApi } from '../Apis/apis';
 
 const Contact = () => {
   const [email, setEmail] = useState('');
@@ -69,7 +69,24 @@ const Contact = () => {
       return;
     }
 
-    // Your form submission logic
+    const contactData = {
+      name,
+      email,
+      phone,
+      message,
+    };
+
+    try {
+      await addContactMessageApi(contactData);
+      toast.success('Message sent successfully!');
+      setName('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
+    } catch (error) {
+      console.error('Error sending contact form data:', error);
+      toast.error('Failed to send message. Please try again later.');
+    }
   };
 
   return (
@@ -221,7 +238,7 @@ const Contact = () => {
                           id="message"
                           rows="4"
                           placeholder="Message"
-                          className={`mb-2 w-full rounded-md border border-gray-400 py-2 pl-2 pr-4 shadow-md dark:text-gray-300 sm:mb-0 ${errors.message ? 'border-red-500' : ''}`}
+                          className={`mb-2 w-full rounded-md border border-gray-400 py-2 pl-2 pr-4 shadow-md sm:mb-0 ${errors.message ? 'border-red-500' : ''}`}
                           onChange={(e) => setMessage(e.target.value)}
                           value={message}
                         ></textarea>

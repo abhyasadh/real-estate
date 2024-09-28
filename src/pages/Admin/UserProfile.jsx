@@ -31,7 +31,7 @@ const UserProfileModal = ({ user, onClose }) => {
             &times;
           </button>
         </div>
-        <div className="p-4">
+        <div className="p-4 overflow-y-auto max-h-[75vh]">
           <div className="mb-4">
             <p><strong>Name:</strong> {user.name}</p>
             <p><strong>Email:</strong> {user.email}</p>

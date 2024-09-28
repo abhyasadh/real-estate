@@ -25,6 +25,10 @@ export const getContactInfoApi = () => ApiJson.get('/api/pages/get-contact-info'
 export const updateAboutInfoApi = (data) => ApiJson.put('/api/pages/update-about-info', data, config);
 export const updateContactInfoApi = (data) => ApiJson.put('/api/pages/update-contact-info', data, config);
 
+export const addContactMessageApi = (data) => ApiJson.post('/api/contactus/add', data);
+export const markAsReadApi = (id) => ApiJson.put(`/api/contactus/update/${id}`, null, config);
+export const getAllContactMessagesApi = () => ApiJson.get('/api/contactus', config);
+
 export const loginApi = (data) => ApiJson.post("/api/users/login", data);
 export const registerApi = (data) => ApiJson.post("/api/users/register", data);
 export const updatePasswordApi = (id, data) => ApiJson.put(`/api/users/${id}/change-password`, data, config);

@@ -36,9 +36,10 @@ const cityRoutes = require('./routes/cityRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const pageRoutes = require('./routes/pageRoutes');
 const propertyTypesRoutes = require('./routes/propertyTypesRoute');
-// const agentRoutes = require('./routes/agentRoutes');
+const contactUsRoutes = require('./routes/contactUsRoutes');
 
 app.use('/api/propertytypes', propertyTypesRoutes);
+app.use('/api/contactus', contactUsRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/states', stateRoutes);

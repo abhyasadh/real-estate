@@ -9,5 +9,4 @@ router.delete('/delete/:id', cityController.deleteCity);
 router.get('/:id', cityController.getCityById);
 router.get('/', cityController.getAllCities);
 
-
 module.exports = router;

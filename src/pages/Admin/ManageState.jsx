@@ -86,7 +86,7 @@ const ManageStates = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
       <div className="w-full max bg-white p-8 rounded-lg shadow-lg mb-10">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
           {editingStateId ? 'Edit State' : 'Add State'}

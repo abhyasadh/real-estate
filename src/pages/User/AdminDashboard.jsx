@@ -7,6 +7,7 @@ import ManageStates from '../Admin/ManageState';
 import ManageCities from '../Admin/ManageCities';
 import ManageProperties from '../Admin/ManageProperties';
 import AdminReceivedEnquiries from '../Admin/AdminReceivedEnquiries';
+import AdminReceivedContacts from '../Admin/AdminReceivedContacts';
 import ManagePages from '../Admin/ManagePages';
 
 const AdminDashboard = () => {
@@ -110,6 +111,14 @@ const AdminDashboard = () => {
           >
             Subscriptions
           </a>
+          <a
+            className={`block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 ${
+              activeTab === 'contacts' ? 'bg-gray-200' : ''
+            }`}
+            onClick={(e) => handleTabClick(e, 'contacts')}
+          >
+            Contacts
+          </a>
         </nav>
       </div>
 
@@ -134,6 +143,7 @@ const AdminDashboard = () => {
           {activeTab === 'manageCities' && <ManageCities />}
           {activeTab === 'manageProperties' && <ManageProperties />}
           {activeTab === 'manageSubscriptions' && <AdminReceivedEnquiries />}
+          {activeTab === 'contacts' && <AdminReceivedContacts />}
         </div>
       </div>
     </div>
